@@ -496,8 +496,8 @@ screenGui.DisplayOrder = 1
 --  NOTIFICATION SYSTEM
 -- ============================================================
 local notifContainer = Instance.new("Frame", screenGui)
-notifContainer.Size = UDim2.new(0, 240, 1, -20)
-notifContainer.Position = UDim2.new(1, -250, 0, 10)
+notifContainer.Size = UDim2.new(0, 250, 1, -20)
+notifContainer.Position = UDim2.new(1, -260, 0, 10)
 notifContainer.BackgroundTransparency = 1
 local notifLayout = Instance.new("UIListLayout", notifContainer)
 notifLayout.Padding = UDim.new(0, 6)
@@ -506,22 +506,22 @@ notifLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
 local function addNotification(title, msg, color)
     local notif = Instance.new("Frame", notifContainer)
-    notif.Size = UDim2.new(1, 0, 0, 50)
+    notif.Size = UDim2.new(1, 0, 0, 56)
     notif.BackgroundColor3 = Color3.fromRGB(18, 16, 28)
     notif.ClipsDescendants = true
-    corner(8, notif)
+    corner(10, notif)
     stroke(color or C.accent, 1, notif)
 
     local accentBar = Instance.new("Frame", notif)
-    accentBar.Size = UDim2.new(0, 3, 1, -8)
+    accentBar.Size = UDim2.new(0, 4, 1, -8)
     accentBar.Position = UDim2.new(0, 4, 0, 4)
     accentBar.BackgroundColor3 = color or C.accent
     corner(2, accentBar)
 
-    label({Text = title, Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = C.white,
-        Size = UDim2.new(1, -20, 0, 16), Position = UDim2.new(0, 14, 0, 6)}, notif)
+    label({Text = title, Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = C.white,
+        Size = UDim2.new(1, -22, 0, 18), Position = UDim2.new(0, 16, 0, 8)}, notif)
     label({Text = msg, Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = C.sub,
-        Size = UDim2.new(1, -20, 0, 16), Position = UDim2.new(0, 14, 0, 24)}, notif)
+        Size = UDim2.new(1, -22, 0, 16), Position = UDim2.new(0, 16, 0, 28)}, notif)
 
     notif.Position = UDim2.new(1, 0, 0, 0)
     tween(notif, 0.3, {Position = UDim2.new(0, 0, 0, 0)})
@@ -536,7 +536,7 @@ end
 --  MAIN FRAME
 -- ============================================================
 local SIDEBAR_W = 140
-local TITLEBAR_H = 40
+local TITLEBAR_H = 46
 
 local currentGuiSize = "Mediano"
 local guiSizes = {
@@ -555,7 +555,8 @@ trackTheme(mainFrame, "BackgroundColor3", "bg")
 mainFrame.Active = true
 mainFrame.Draggable = true
 corner(10, mainFrame)
-stroke(C.border, 1, mainFrame)
+local mainStroke = stroke(C.border, 1, mainFrame)
+trackTheme(mainStroke, "Color", "border")
 
 mainFrame.BackgroundTransparency = 1
 tween(mainFrame, 0.35, {BackgroundTransparency = 0})
@@ -576,30 +577,30 @@ trackTheme(titleBarFill, "BackgroundColor3", "panel")
 titleBarFill.BorderSizePixel = 0
 
 local titleName = label({
-    Text = "Rivals Hub", Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = C.white,
-    Size = UDim2.new(0, 80, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+    Text = "Rivals Hub", Font = Enum.Font.GothamBlack, TextSize = 15, TextColor3 = C.white,
+    Size = UDim2.new(0, 90, 1, 0), Position = UDim2.new(0, 12, 0, 0),
 }, titleBar)
 
 -- PREMIUM BADGE (positioned right after title text)
 local premiumBadge = Instance.new("Frame", titleBar)
-premiumBadge.Size = UDim2.new(0, 60, 0, 16)
-premiumBadge.Position = UDim2.new(0, 96, 0.5, -8)
+premiumBadge.Size = UDim2.new(0, 70, 0, 20)
+premiumBadge.Position = UDim2.new(0, 106, 0.5, -10)
 premiumBadge.BackgroundColor3 = C.accent
-corner(4, premiumBadge)
+corner(8, premiumBadge)
 trackAccent(premiumBadge, "BackgroundColor3")
 
-label({Text = "PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 8,
+label({Text = "PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 10,
     TextColor3 = Color3.fromRGB(10, 8, 5),
     Size = UDim2.new(1, 0, 1, 0),
     TextXAlignment = Enum.TextXAlignment.Center,
 }, premiumBadge)
 
 local titleLine = Instance.new("Frame", mainFrame)
-titleLine.Size = UDim2.new(1, 0, 0, 1)
+titleLine.Size = UDim2.new(1, 0, 0, 2)
 titleLine.Position = UDim2.new(0, 0, 0, TITLEBAR_H)
-titleLine.BackgroundColor3 = C.border
+titleLine.BackgroundColor3 = C.accent
 titleLine.BorderSizePixel = 0
-trackTheme(titleLine, "BackgroundColor3", "border")
+trackAccent(titleLine, "BackgroundColor3")
 
 -- Close button (top-right)
 local closeBtn = Instance.new("TextButton", titleBar)
@@ -637,16 +638,16 @@ sidebarLine.BorderSizePixel = 0
 trackTheme(sidebarLine, "BackgroundColor3", "border")
 
 local sideLayout = Instance.new("UIListLayout", sidebar)
-sideLayout.Padding = UDim.new(0, 1)
+sideLayout.Padding = UDim.new(0, 2)
 sideLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local sidePad = Instance.new("UIPadding", sidebar)
-sidePad.PaddingTop = UDim.new(0, 6); sidePad.PaddingLeft = UDim.new(0, 6)
-sidePad.PaddingRight = UDim.new(0, 6); sidePad.PaddingBottom = UDim.new(0, 6)
+sidePad.PaddingTop = UDim.new(0, 8); sidePad.PaddingLeft = UDim.new(0, 8)
+sidePad.PaddingRight = UDim.new(0, 8); sidePad.PaddingBottom = UDim.new(0, 8)
 
 -- CONTENT FRAME
 local contentFrame = Instance.new("ScrollingFrame", mainFrame)
-contentFrame.Size = UDim2.new(1, -(SIDEBAR_W + 12), 1, -(TITLEBAR_H + 8))
-contentFrame.Position = UDim2.new(0, SIDEBAR_W + 6, 0, TITLEBAR_H + 4)
+contentFrame.Size = UDim2.new(1, -(SIDEBAR_W + 14), 1, -(TITLEBAR_H + 10))
+contentFrame.Position = UDim2.new(0, SIDEBAR_W + 6, 0, TITLEBAR_H + 6)
 contentFrame.BackgroundTransparency = 1
 contentFrame.ScrollBarThickness = 3
 contentFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 80)
@@ -658,8 +659,8 @@ local contentLayout = Instance.new("UIListLayout", contentFrame)
 contentLayout.Padding = UDim.new(0, 8)
 contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local contentPad = Instance.new("UIPadding", contentFrame)
-contentPad.PaddingTop = UDim.new(0, 6); contentPad.PaddingBottom = UDim.new(0, 10)
-contentPad.PaddingRight = UDim.new(0, 6)
+contentPad.PaddingTop = UDim.new(0, 8); contentPad.PaddingBottom = UDim.new(0, 10)
+contentPad.PaddingRight = UDim.new(0, 8)
 
 -- ============================================================
 --  TAB SYSTEM
@@ -692,15 +693,15 @@ end
 
 local function createNavBtn(name, displayText)
     local btn = Instance.new("TextButton", sidebar)
-    btn.Size = UDim2.new(1, 0, 0, 28)
+    btn.Size = UDim2.new(1, 0, 0, 32)
     btn.BackgroundTransparency = 1; btn.Text = displayText
-    btn.Font = Enum.Font.Gotham; btn.TextSize = 11
+    btn.Font = Enum.Font.Gotham; btn.TextSize = 12
     btn.TextColor3 = C.sub; btn.TextXAlignment = Enum.TextXAlignment.Left
     corner(6, btn)
     local pad = Instance.new("UIPadding", btn); pad.PaddingLeft = UDim.new(0, 10)
     local activeLine = Instance.new("Frame", btn)
     activeLine.Name = "ActiveLine"
-    activeLine.Size = UDim2.new(0, 2, 0.5, 0); activeLine.Position = UDim2.new(0, -6, 0.25, 0)
+    activeLine.Size = UDim2.new(0, 3, 0.6, 0); activeLine.Position = UDim2.new(0, -6, 0.2, 0)
     activeLine.BackgroundTransparency = 1; activeLine.BorderSizePixel = 0
     corner(2, activeLine)
     btn.MouseButton1Click:Connect(function() showPage(name) end)
@@ -720,7 +721,7 @@ local function createPage(name)
     frame.AutomaticSize = Enum.AutomaticSize.Y
     frame.BackgroundTransparency = 1; frame.Visible = false; frame.LayoutOrder = 1
     local layout = Instance.new("UIListLayout", frame)
-    layout.Padding = UDim.new(0, 6); layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Padding = UDim.new(0, 7); layout.SortOrder = Enum.SortOrder.LayoutOrder
     pages[name] = frame
     return frame
 end
@@ -732,9 +733,13 @@ end
 -- Section title
 local function addSectionTitle(text, parent, order)
     local f = Instance.new("Frame", parent)
-    f.Size = UDim2.new(1, 0, 0, 20); f.BackgroundTransparency = 1; f.LayoutOrder = order or 0
-    local sectionLbl = label({Text = text, Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = C.text,
-        Size = UDim2.new(1,0,1,0), TextXAlignment = Enum.TextXAlignment.Left}, f)
+    f.Size = UDim2.new(1, 0, 0, 24); f.BackgroundTransparency = 1; f.LayoutOrder = order or 0
+    local accentLine = Instance.new("Frame", f)
+    accentLine.Size = UDim2.new(0, 3, 0.6, 0); accentLine.Position = UDim2.new(0, 0, 0.2, 0)
+    accentLine.BackgroundColor3 = C.accent; accentLine.BorderSizePixel = 0
+    corner(2, accentLine); trackAccent(accentLine, "BackgroundColor3")
+    local sectionLbl = label({Text = text, Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = C.text,
+        Size = UDim2.new(1,-8,1,0), Position = UDim2.new(0,8,0,0), TextXAlignment = Enum.TextXAlignment.Left}, f)
     trackTheme(sectionLbl, "TextColor3", "text")
     return f
 end
@@ -742,30 +747,30 @@ end
 -- Toggle row
 local function addToggleRow(titleText, subText, parent, order, callback)
     local row = Instance.new("Frame", parent)
-    row.Size = UDim2.new(1, 0, 0, subText and 44 or 34)
+    row.Size = UDim2.new(1, 0, 0, subText and 48 or 38)
     row.BackgroundColor3 = C.item; row.LayoutOrder = order or 1
     row.ClipsDescendants = true
-    corner(6, row); stroke(Color3.fromRGB(35, 35, 45), 1, row)
-    trackTheme(row, "BackgroundColor3", "item")
+    corner(8, row); local rowStroke = stroke(C.border, 1, row)
+    trackTheme(row, "BackgroundColor3", "item"); trackTheme(rowStroke, "Color", "border")
 
-    local titleLbl = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 12, TextColor3 = C.text,
-        Size = UDim2.new(1, -54, 0, 18), Position = UDim2.new(0, 10, 0, subText and 5 or 0),
+    local titleLbl = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 13, TextColor3 = C.text,
+        Size = UDim2.new(1, -58, 0, 20), Position = UDim2.new(0, 10, 0, subText and 6 or 0),
         TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Center}, row)
     trackTheme(titleLbl, "TextColor3", "text")
 
     if subText then
-        local subLbl = label({Text = subText, Font = Enum.Font.Gotham, TextSize = 9, TextColor3 = C.sub,
-            Size = UDim2.new(1, -54, 0, 14), Position = UDim2.new(0, 10, 0, 24),
+        local subLbl = label({Text = subText, Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = C.sub,
+            Size = UDim2.new(1, -58, 0, 14), Position = UDim2.new(0, 10, 0, 27),
             TextXAlignment = Enum.TextXAlignment.Left}, row)
         trackTheme(subLbl, "TextColor3", "sub")
     end
 
     local toggleBg = Instance.new("Frame", row)
-    toggleBg.Size = UDim2.new(0, 36, 0, 20); toggleBg.Position = UDim2.new(1, -46, 0.5, -10)
+    toggleBg.Size = UDim2.new(0, 40, 0, 22); toggleBg.Position = UDim2.new(1, -50, 0.5, -11)
     toggleBg.BackgroundColor3 = Color3.fromRGB(42, 42, 50); corner(99, toggleBg)
 
     local toggleKnob = Instance.new("Frame", toggleBg)
-    toggleKnob.Size = UDim2.new(0, 14, 0, 14); toggleKnob.Position = UDim2.new(0, 3, 0.5, -7)
+    toggleKnob.Size = UDim2.new(0, 16, 0, 16); toggleKnob.Position = UDim2.new(0, 3, 0.5, -8)
     toggleKnob.BackgroundColor3 = Color3.fromRGB(90, 90, 105); corner(99, toggleKnob)
 
     local isOn = false
@@ -773,10 +778,10 @@ local function addToggleRow(titleText, subText, parent, order, callback)
         isOn = state
         if isOn then
             tween(toggleBg, 0.15, {BackgroundColor3 = Color3.fromRGB(50, 45, 80)})
-            tween(toggleKnob, 0.15, {Position = UDim2.new(0, 19, 0.5, -7), BackgroundColor3 = C.accent2})
+            tween(toggleKnob, 0.15, {Position = UDim2.new(0, 21, 0.5, -8), BackgroundColor3 = C.accent2})
         else
             tween(toggleBg, 0.15, {BackgroundColor3 = Color3.fromRGB(42, 42, 50)})
-            tween(toggleKnob, 0.15, {Position = UDim2.new(0, 3, 0.5, -7), BackgroundColor3 = Color3.fromRGB(90, 90, 105)})
+            tween(toggleKnob, 0.15, {Position = UDim2.new(0, 3, 0.5, -8), BackgroundColor3 = Color3.fromRGB(90, 90, 105)})
         end
         if callback then callback(isOn) end
     end
@@ -793,23 +798,23 @@ end
 -- Slider row
 local function addSliderRow(titleText, minVal, maxVal, defaultVal, parent, order, callback)
     local container = Instance.new("Frame", parent)
-    container.Size = UDim2.new(1, 0, 0, 44); container.BackgroundColor3 = C.item; container.LayoutOrder = order or 1
+    container.Size = UDim2.new(1, 0, 0, 50); container.BackgroundColor3 = C.item; container.LayoutOrder = order or 1
     container.ClipsDescendants = true
-    corner(6, container); stroke(Color3.fromRGB(35, 35, 45), 1, container)
-    trackTheme(container, "BackgroundColor3", "item")
+    corner(8, container); local sliderStroke = stroke(C.border, 1, container)
+    trackTheme(container, "BackgroundColor3", "item"); trackTheme(sliderStroke, "Color", "border")
 
-    local sliderTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 12, TextColor3 = C.text,
-        Size = UDim2.new(0.6, -10, 0, 18), Position = UDim2.new(0, 10, 0, 4),
+    local sliderTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 13, TextColor3 = C.text,
+        Size = UDim2.new(0.6, -10, 0, 20), Position = UDim2.new(0, 10, 0, 5),
         TextXAlignment = Enum.TextXAlignment.Left}, container)
     trackTheme(sliderTitle, "TextColor3", "text")
 
-    local valLabel = label({Text = tostring(defaultVal), Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = C.accent2,
-        Size = UDim2.new(0.4, -10, 0, 18), Position = UDim2.new(0.6, 0, 0, 4),
+    local valLabel = label({Text = tostring(defaultVal), Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = C.accent2,
+        Size = UDim2.new(0.4, -10, 0, 20), Position = UDim2.new(0.6, 0, 0, 5),
         TextXAlignment = Enum.TextXAlignment.Right}, container)
     trackAccent2(valLabel, "TextColor3")
 
     local track = Instance.new("Frame", container)
-    track.Size = UDim2.new(1, -20, 0, 4); track.Position = UDim2.new(0, 10, 0, 28)
+    track.Size = UDim2.new(1, -20, 0, 5); track.Position = UDim2.new(0, 10, 0, 32)
     track.BackgroundColor3 = Color3.fromRGB(42, 42, 55); corner(99, track)
 
     local fill = Instance.new("Frame", track)
@@ -818,15 +823,15 @@ local function addSliderRow(titleText, minVal, maxVal, defaultVal, parent, order
     trackAccent(fill, "BackgroundColor3")
 
     local knob = Instance.new("Frame", track)
-    knob.Size = UDim2.new(0, 10, 0, 10)
-    knob.Position = UDim2.new((defaultVal - minVal) / (maxVal - minVal), -5, 0.5, -5)
+    knob.Size = UDim2.new(0, 12, 0, 12)
+    knob.Position = UDim2.new((defaultVal - minVal) / (maxVal - minVal), -6, 0.5, -6)
     knob.BackgroundColor3 = C.white; corner(99, knob)
 
     local currentVal = defaultVal
     local dragging = false
 
     local dragBtn = Instance.new("TextButton", container)
-    dragBtn.Size = UDim2.new(1, -20, 0, 18); dragBtn.Position = UDim2.new(0, 10, 0, 22)
+    dragBtn.Size = UDim2.new(1, -20, 0, 20); dragBtn.Position = UDim2.new(0, 10, 0, 26)
     dragBtn.BackgroundTransparency = 1; dragBtn.Text = ""
 
     local function updateSlider(x)
@@ -836,7 +841,7 @@ local function addSliderRow(titleText, minVal, maxVal, defaultVal, parent, order
         local pct = math.clamp((x - trackAbsX) / trackAbsW, 0, 1)
         currentVal = math.floor(minVal + pct * (maxVal - minVal))
         fill.Size = UDim2.new(pct, 0, 1, 0)
-        knob.Position = UDim2.new(pct, -5, 0.5, -5)
+        knob.Position = UDim2.new(pct, -6, 0.5, -6)
         valLabel.Text = tostring(currentVal)
         if callback then callback(currentVal) end
     end
@@ -857,16 +862,16 @@ end
 -- Teleport button
 local function addTpButton(titleText, coords, dotColor, parent, order, callback)
     local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(1, 0, 0, 34); btn.BackgroundColor3 = C.item; btn.Text = ""; btn.LayoutOrder = order or 1
+    btn.Size = UDim2.new(1, 0, 0, 38); btn.BackgroundColor3 = C.item; btn.Text = ""; btn.LayoutOrder = order or 1
     btn.ClipsDescendants = true
-    corner(6, btn); stroke(Color3.fromRGB(35, 35, 45), 1, btn)
-    trackTheme(btn, "BackgroundColor3", "item")
+    corner(8, btn); local tpStroke = stroke(C.border, 1, btn)
+    trackTheme(btn, "BackgroundColor3", "item"); trackTheme(tpStroke, "Color", "border")
 
     local dot = Instance.new("Frame", btn)
-    dot.Size = UDim2.new(0, 6, 0, 6); dot.Position = UDim2.new(0, 10, 0.5, -3)
+    dot.Size = UDim2.new(0, 8, 0, 8); dot.Position = UDim2.new(0, 10, 0.5, -4)
     dot.BackgroundColor3 = dotColor; corner(99, dot)
 
-    local tpTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 11, TextColor3 = C.text,
+    local tpTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 12, TextColor3 = C.text,
         Size = UDim2.new(0.55, -20, 1, 0), Position = UDim2.new(0, 22, 0, 0),
         TextXAlignment = Enum.TextXAlignment.Left}, btn)
     trackTheme(tpTitle, "TextColor3", "text")
@@ -888,17 +893,17 @@ end
 -- Button row
 local function addButtonRow(titleText, parent, order, callback)
     local btn = Instance.new("TextButton", parent)
-    btn.Size = UDim2.new(1, 0, 0, 34); btn.BackgroundColor3 = C.item; btn.Text = ""
+    btn.Size = UDim2.new(1, 0, 0, 38); btn.BackgroundColor3 = C.item; btn.Text = ""
     btn.LayoutOrder = order or 1; btn.ClipsDescendants = true
-    corner(6, btn); stroke(Color3.fromRGB(35, 35, 45), 1, btn)
-    trackTheme(btn, "BackgroundColor3", "item")
+    corner(8, btn); local btnStroke = stroke(C.border, 1, btn)
+    trackTheme(btn, "BackgroundColor3", "item"); trackTheme(btnStroke, "Color", "border")
 
-    local btnTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 12, TextColor3 = C.text,
+    local btnTitle = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 13, TextColor3 = C.text,
         Size = UDim2.new(1, -20, 1, 0), Position = UDim2.new(0, 10, 0, 0),
         TextXAlignment = Enum.TextXAlignment.Left}, btn)
     trackTheme(btnTitle, "TextColor3", "text")
 
-    local arrow = label({Text = ">", Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = C.sub,
+    local arrow = label({Text = ">", Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = C.sub,
         Size = UDim2.new(0, 16, 1, 0), Position = UDim2.new(1, -22, 0, 0),
         TextXAlignment = Enum.TextXAlignment.Right}, btn)
 
@@ -915,24 +920,24 @@ end
 -- Dropdown row
 local function addDropdownRow(titleText, options, parent, order, callback)
     local container = Instance.new("Frame", parent)
-    container.Size = UDim2.new(1, 0, 0, 34); container.BackgroundColor3 = C.item
+    container.Size = UDim2.new(1, 0, 0, 38); container.BackgroundColor3 = C.item
     container.LayoutOrder = order or 1; container.ClipsDescendants = true
-    corner(6, container); stroke(Color3.fromRGB(35, 35, 45), 1, container)
-    trackTheme(container, "BackgroundColor3", "item")
+    corner(8, container); local ddStroke = stroke(C.border, 1, container)
+    trackTheme(container, "BackgroundColor3", "item"); trackTheme(ddStroke, "Color", "border")
 
-    local selectedLabel = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 12,
-        TextColor3 = C.text, Size = UDim2.new(1, -30, 0, 34), Position = UDim2.new(0, 10, 0, 0),
+    local selectedLabel = label({Text = titleText, Font = Enum.Font.GothamSemibold, TextSize = 13,
+        TextColor3 = C.text, Size = UDim2.new(1, -30, 0, 38), Position = UDim2.new(0, 10, 0, 0),
         TextXAlignment = Enum.TextXAlignment.Left}, container)
     trackTheme(selectedLabel, "TextColor3", "text")
 
     local arrowLabel = label({Text = "v", Font = Enum.Font.GothamBold, TextSize = 11,
-        TextColor3 = C.sub, Size = UDim2.new(0, 16, 0, 34), Position = UDim2.new(1, -22, 0, 0),
+        TextColor3 = C.sub, Size = UDim2.new(0, 16, 0, 38), Position = UDim2.new(1, -22, 0, 0),
         TextXAlignment = Enum.TextXAlignment.Right}, container)
 
     local expanded = false
     local optionFrames = {}
-    local baseHeight = 34
-    local optionHeight = 26
+    local baseHeight = 38
+    local optionHeight = 30
 
     local function createOptions(opts)
         for _, f in ipairs(optionFrames) do f:Destroy() end
@@ -960,7 +965,7 @@ local function addDropdownRow(titleText, options, parent, order, callback)
     createOptions(options)
 
     local headerBtn = Instance.new("TextButton", container)
-    headerBtn.Size = UDim2.new(1, 0, 0, baseHeight); headerBtn.BackgroundTransparency = 1; headerBtn.Text = ""
+    headerBtn.Size = UDim2.new(1, 0, 0, 38); headerBtn.BackgroundTransparency = 1; headerBtn.Text = ""
     headerBtn.MouseButton1Click:Connect(function()
         expanded = not expanded
         if expanded then
@@ -1008,12 +1013,13 @@ createNavBtn("Settings",       "  Settings")
 --  HOME PAGE
 -- ============================================================
 local banner = Instance.new("Frame", homePage)
-banner.Size = UDim2.new(1, 0, 0, 68)
+banner.Size = UDim2.new(1, 0, 0, 80)
 banner.BackgroundColor3 = C.panel
 banner.ClipsDescendants = true
 trackTheme(banner, "BackgroundColor3", "panel")
-banner.LayoutOrder = 1; corner(8, banner)
-stroke(Color3.fromRGB(80, 65, 160), 1, banner)
+banner.LayoutOrder = 1; corner(10, banner)
+local bannerStroke = stroke(C.border, 1, banner)
+trackTheme(bannerStroke, "Color", "border")
 
 local bannerGlow = Instance.new("Frame", banner)
 bannerGlow.Size = UDim2.new(1, 0, 0, 3)
@@ -1021,59 +1027,66 @@ bannerGlow.Position = UDim2.new(0, 0, 0, 0)
 bannerGlow.BackgroundColor3 = C.accent; bannerGlow.BorderSizePixel = 0
 trackAccent(bannerGlow, "BackgroundColor3")
 
+local bannerGlowBottom = Instance.new("Frame", banner)
+bannerGlowBottom.Size = UDim2.new(1, 0, 0, 1)
+bannerGlowBottom.Position = UDim2.new(0, 0, 1, -1)
+bannerGlowBottom.BackgroundColor3 = C.accent; bannerGlowBottom.BorderSizePixel = 0
+bannerGlowBottom.BackgroundTransparency = 0.6
+trackAccent(bannerGlowBottom, "BackgroundColor3")
+
 local iconWrap = Instance.new("Frame", banner)
-iconWrap.Size = UDim2.new(0, 44, 0, 44); iconWrap.Position = UDim2.new(0, 8, 0.5, -22)
+iconWrap.Size = UDim2.new(0, 52, 0, 52); iconWrap.Position = UDim2.new(0, 10, 0.5, -26)
 iconWrap.BackgroundColor3 = Color3.fromRGB(22, 17, 38); iconWrap.ClipsDescendants = true
-corner(99, iconWrap); stroke(C.accent, 1, iconWrap)
+corner(99, iconWrap); stroke(C.accent, 2, iconWrap)
 
 local iconImage = Instance.new("ImageLabel", iconWrap)
 iconImage.Size = UDim2.new(1, 0, 1, 0); iconImage.BackgroundTransparency = 1
 iconImage.Image = "rbxassetid://127186589815047"; iconImage.ScaleType = Enum.ScaleType.Fit; iconImage.ZIndex = 10
 
-local bannerTitle = label({Text = "RIVALS HUB PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 13, TextColor3 = C.accent,
-    Size = UDim2.new(1, -66, 0, 20), Position = UDim2.new(0, 60, 0, 8),
+local bannerTitle = label({Text = "RIVALS HUB PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 16, TextColor3 = C.accent,
+    Size = UDim2.new(1, -76, 0, 22), Position = UDim2.new(0, 70, 0, 12),
     TextXAlignment = Enum.TextXAlignment.Left}, banner)
 bannerTitle.TextTruncate = Enum.TextTruncate.AtEnd
 trackAccent(bannerTitle, "TextColor3")
 
 local statusRow = Instance.new("Frame", banner)
-statusRow.Size = UDim2.new(1, -66, 0, 16); statusRow.Position = UDim2.new(0, 60, 0, 30)
+statusRow.Size = UDim2.new(1, -76, 0, 18); statusRow.Position = UDim2.new(0, 70, 0, 38)
 statusRow.BackgroundTransparency = 1
 
 local statusDot = Instance.new("Frame", statusRow)
 statusDot.Size = UDim2.new(0, 5, 0, 5); statusDot.Position = UDim2.new(0, 0, 0.5, -2)
 statusDot.BackgroundColor3 = C.green; corner(99, statusDot)
 
-label({Text = "Active", Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = C.green,
-    Size = UDim2.new(0, 40, 1, 0), Position = UDim2.new(0, 8, 0, 0)}, statusRow)
-label({Text = LocalPlayer.Name, Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = C.sub,
-    Size = UDim2.new(1, -54, 1, 0), Position = UDim2.new(0, 54, 0, 0),
+label({Text = "Active", Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = C.green,
+    Size = UDim2.new(0, 42, 1, 0), Position = UDim2.new(0, 8, 0, 0)}, statusRow)
+label({Text = LocalPlayer.Name, Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = C.sub,
+    Size = UDim2.new(1, -56, 1, 0), Position = UDim2.new(0, 56, 0, 0),
     TextXAlignment = Enum.TextXAlignment.Left}, statusRow)
 
 -- Info grid
 local infoGrid = Instance.new("Frame", homePage)
-infoGrid.Size = UDim2.new(1, 0, 0, 48); infoGrid.BackgroundTransparency = 1; infoGrid.LayoutOrder = 2
+infoGrid.Size = UDim2.new(1, 0, 0, 56); infoGrid.BackgroundTransparency = 1; infoGrid.LayoutOrder = 2
 local gridLayout = Instance.new("UIGridLayout", infoGrid)
 gridLayout.CellSize = UDim2.new(0.5, -3, 1, 0); gridLayout.CellPadding = UDim2.new(0, 6, 0, 0)
 
 for _, d in ipairs({{"Version", "v3.0 Premium"}, {"Executor", "Delta"}}) do
     local card = Instance.new("Frame", infoGrid); card.BackgroundColor3 = C.item
-    corner(6, card); stroke(Color3.fromRGB(35,35,45), 1, card)
-    trackTheme(card, "BackgroundColor3", "item")
-    local cardSub = label({Text = d[1], Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = C.sub,
-        Size = UDim2.new(1,-16,0,14), Position = UDim2.new(0,8,0,6)}, card)
+    corner(8, card); local cardStroke = stroke(C.border, 1, card)
+    trackTheme(card, "BackgroundColor3", "item"); trackTheme(cardStroke, "Color", "border")
+    local cardSub = label({Text = d[1], Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = C.sub,
+        Size = UDim2.new(1,-16,0,16), Position = UDim2.new(0,8,0,8)}, card)
     trackTheme(cardSub, "TextColor3", "sub")
-    local cardVal = label({Text = d[2], Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = C.accent2,
-        Size = UDim2.new(1,-16,0,18), Position = UDim2.new(0,8,0,22)}, card)
+    local cardVal = label({Text = d[2], Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = C.accent2,
+        Size = UDim2.new(1,-16,0,20), Position = UDim2.new(0,8,0,26)}, card)
     trackAccent2(cardVal, "TextColor3")
 end
 
 -- Discord row
 local discordRow = Instance.new("TextButton", homePage)
-discordRow.Size = UDim2.new(1, 0, 0, 32); discordRow.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
-discordRow.Text = ""; discordRow.LayoutOrder = 3; corner(6, discordRow)
+discordRow.Size = UDim2.new(1, 0, 0, 36); discordRow.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
+discordRow.Text = ""; discordRow.LayoutOrder = 3; corner(8, discordRow)
 stroke(Color3.fromRGB(60, 65, 140), 1, discordRow)
-label({Text = "discord.gg/QvpGRwDdpZ", Font = Enum.Font.GothamSemibold, TextSize = 11,
+label({Text = "discord.gg/QvpGRwDdpZ", Font = Enum.Font.GothamSemibold, TextSize = 13,
     TextColor3 = C.accent2, Size = UDim2.new(1,0,1,0), TextXAlignment = Enum.TextXAlignment.Center}, discordRow)
 discordRow.MouseEnter:Connect(function() tween(discordRow, 0.1, {BackgroundColor3 = Color3.fromRGB(25,25,65)}) end)
 discordRow.MouseLeave:Connect(function() tween(discordRow, 0.1, {BackgroundColor3 = Color3.fromRGB(20,20,50)}) end)
@@ -1081,9 +1094,9 @@ discordRow.MouseLeave:Connect(function() tween(discordRow, 0.1, {BackgroundColor
 -- GUI Size selector
 addSectionTitle("Tamano de GUI", homePage, 4)
 local sizeContainer = Instance.new("Frame", homePage)
-sizeContainer.Size = UDim2.new(1, 0, 0, 36); sizeContainer.BackgroundColor3 = C.item; sizeContainer.LayoutOrder = 5
-corner(6, sizeContainer); stroke(Color3.fromRGB(35, 35, 45), 1, sizeContainer)
-trackTheme(sizeContainer, "BackgroundColor3", "item")
+sizeContainer.Size = UDim2.new(1, 0, 0, 40); sizeContainer.BackgroundColor3 = C.item; sizeContainer.LayoutOrder = 5
+corner(8, sizeContainer); local szStroke = stroke(C.border, 1, sizeContainer)
+trackTheme(sizeContainer, "BackgroundColor3", "item"); trackTheme(szStroke, "Color", "border")
 local szLayout = Instance.new("UIListLayout", sizeContainer)
 szLayout.FillDirection = Enum.FillDirection.Horizontal
 szLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -1108,7 +1121,7 @@ for _, s in ipairs({
     {label = "Grande",  w = 620, h = 450},
 }) do
     local btn = Instance.new("TextButton", sizeContainer)
-    btn.Size = UDim2.new(0, 78, 0, 24)
+    btn.Size = UDim2.new(0, 84, 0, 26)
     btn.BackgroundColor3 = s.label == "Mediano" and C.accent or Color3.fromRGB(30, 30, 40)
     btn.TextColor3 = s.label == "Mediano" and C.white or C.sub
     btn.Text = s.label; btn.Font = Enum.Font.GothamSemibold; btn.TextSize = 11
@@ -1404,17 +1417,17 @@ addSectionTitle("Rendimiento", visualPage, 4)
 
 -- FPS Booster button
 local fpsBtn = Instance.new("TextButton", visualPage)
-fpsBtn.Size = UDim2.new(1, 0, 0, 44); fpsBtn.BackgroundColor3 = C.item; fpsBtn.Text = ""
+fpsBtn.Size = UDim2.new(1, 0, 0, 48); fpsBtn.BackgroundColor3 = C.item; fpsBtn.Text = ""
 fpsBtn.LayoutOrder = 6; fpsBtn.ClipsDescendants = true
-corner(6, fpsBtn); stroke(Color3.fromRGB(35, 35, 45), 1, fpsBtn)
-trackTheme(fpsBtn, "BackgroundColor3", "item")
+corner(8, fpsBtn); local fpsStroke = stroke(C.border, 1, fpsBtn)
+trackTheme(fpsBtn, "BackgroundColor3", "item"); trackTheme(fpsStroke, "Color", "border")
 
-local fpsTitle = label({Text = "FPS Booster", Font = Enum.Font.GothamSemibold, TextSize = 12, TextColor3 = C.text,
-    Size = UDim2.new(1, -20, 0, 18), Position = UDim2.new(0, 10, 0, 5)}, fpsBtn)
+local fpsTitle = label({Text = "FPS Booster", Font = Enum.Font.GothamSemibold, TextSize = 13, TextColor3 = C.text,
+    Size = UDim2.new(1, -20, 0, 20), Position = UDim2.new(0, 10, 0, 6)}, fpsBtn)
 trackTheme(fpsTitle, "TextColor3", "text")
 local fpsSubLabel = label({Text = "Presiona para ejecutar",
-    Font = Enum.Font.Gotham, TextSize = 9, TextColor3 = C.sub,
-    Size = UDim2.new(1, -20, 0, 14), Position = UDim2.new(0, 10, 0, 24)}, fpsBtn)
+    Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = C.sub,
+    Size = UDim2.new(1, -20, 0, 14), Position = UDim2.new(0, 10, 0, 27)}, fpsBtn)
 
 local fpsDot = Instance.new("Frame", fpsBtn)
 fpsDot.Size = UDim2.new(0, 7, 0, 7); fpsDot.Position = UDim2.new(1, -18, 0.5, -3)
