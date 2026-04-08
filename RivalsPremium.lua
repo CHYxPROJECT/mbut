@@ -1359,6 +1359,49 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
     end
 end)
 
+addSectionTitle("Profile Showcase", extraPage, 8)
+
+-- Showcase state
+local ShowcaseSlot = 1
+local ShowcaseItemId = 786
+local ShowcaseItemName = "Pirate King"
+
+local ShowcaseItems = {
+    {name = "Pirate King",          id = 786},
+    {name = "Le Antigua",           id = 65},
+    {name = "Super Ultra Pain",     id = 478},
+    {name = "Cotton Candy Pain",    id = 478},
+    {name = "YouTuber",             id = 680},
+    {name = "Pink Portal",          id = 458},
+    {name = "Equal to the Heaven",  id = 737},
+    {name = "Dragon Fisica",        id = 254},
+}
+
+local slotNames = {"Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6"}
+addDropdownRow("Slot", slotNames, extraPage, 9, function(opt)
+    ShowcaseSlot = tonumber(opt:match("%d+")) or 1
+end)
+
+local itemNames = {}
+for _, item in ipairs(ShowcaseItems) do table.insert(itemNames, item.name) end
+addDropdownRow("Item", itemNames, extraPage, 10, function(opt)
+    for _, item in ipairs(ShowcaseItems) do
+        if item.name == opt then
+            ShowcaseItemId = item.id
+            ShowcaseItemName = item.name
+            break
+        end
+    end
+end)
+
+addButtonRow("Aplicar Showcase", extraPage, 11, function()
+    pcall(function()
+        local args = {"Showcase", ShowcaseSlot, ShowcaseItemId}
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UpdatePlayerProfileValue"):InvokeServer(unpack(args))
+    end)
+    addNotification("Showcase", ShowcaseItemName .. " en Slot " .. ShowcaseSlot, C.green)
+end)
+
 -- ============================================================
 --  VISUAL PAGE
 -- ============================================================
