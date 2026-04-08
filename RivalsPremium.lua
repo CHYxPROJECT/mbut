@@ -248,6 +248,8 @@ local walkWaterEnabled    = false
 local sVal                = 16
 local sAct                = false
 local flyGui              = nil
+local oneShotGui          = nil
+local aimlockGui          = nil
 -- Aimlock internals
 local u4                  = false
 local u19                 = nil
@@ -1154,14 +1156,140 @@ end)
 
 addSectionTitle("Aimlock", combatPage, 5)
 
-addToggleRow("Aimlock", "Q para lockear - cercano al centro", combatPage, 6, function(on)
-    AimlockEnabled = on
-    if on then u19 = FindNearestEnemy(); u4 = true
-    else u4 = false; u19 = nil end
-end)
+addToggleRow("Aimlock", "Abre panel - Q para lockear", combatPage, 6, function(on)
+    if on then
+        if aimlockGui then aimlockGui:Destroy(); aimlockGui = nil end
+        task.spawn(function()
+            local player = LocalPlayer
+            local main = Instance.new("ScreenGui")
+            main.Name = "Aimlock_RivalsPremium"; main.Parent = player:WaitForChild("PlayerGui")
+            main.ResetOnSpawn = false; main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+            aimlockGui = main
 
-addSliderRow("Offset Vertical", -5, 5, 0, combatPage, 7, function(val)
-    AimlockVerticalOffset = val
+            local Frame = Instance.new("Frame", main)
+            Frame.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+            Frame.Position = UDim2.new(0.5, -100, 0, 10)
+            Frame.Size = UDim2.new(0, 200, 0, 120)
+            Frame.Active = true; Frame.Draggable = true
+            local fc = Instance.new("UICorner", Frame); fc.CornerRadius = UDim.new(0, 8)
+            local fs = Instance.new("UIStroke", Frame); fs.Color = C.accent; fs.Thickness = 1
+
+            -- Title
+            local titleLbl = Instance.new("TextLabel", Frame)
+            titleLbl.Size = UDim2.new(1, -32, 0, 28)
+            titleLbl.Position = UDim2.new(0, 8, 0, 0)
+            titleLbl.BackgroundTransparency = 1
+            titleLbl.Text = "AIMLOCK"; titleLbl.Font = Enum.Font.GothamBlack
+            titleLbl.TextSize = 13; titleLbl.TextColor3 = C.accent
+            titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- Close
+            local closeBtn3 = Instance.new("TextButton", Frame)
+            closeBtn3.Size = UDim2.new(0, 28, 0, 28)
+            closeBtn3.Position = UDim2.new(1, -28, 0, 0)
+            closeBtn3.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+            closeBtn3.Text = "X"; closeBtn3.Font = Enum.Font.GothamBold
+            closeBtn3.TextSize = 14; closeBtn3.TextColor3 = Color3.new(1,1,1)
+            local cc = Instance.new("UICorner", closeBtn3); cc.CornerRadius = UDim.new(0, 6)
+
+            -- Toggle ON/OFF button
+            local toggleBtn = Instance.new("TextButton", Frame)
+            toggleBtn.Size = UDim2.new(1, -16, 0, 30)
+            toggleBtn.Position = UDim2.new(0, 8, 0, 32)
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            toggleBtn.Text = "AIMLOCK OFF (Q)"; toggleBtn.Font = Enum.Font.GothamBold
+            toggleBtn.TextSize = 13; toggleBtn.TextColor3 = Color3.new(1,1,1)
+            local tc = Instance.new("UICorner", toggleBtn); tc.CornerRadius = UDim.new(0, 6)
+
+            -- Offset label
+            local offsetLbl = Instance.new("TextLabel", Frame)
+            offsetLbl.Size = UDim2.new(0.5, -8, 0, 20)
+            offsetLbl.Position = UDim2.new(0, 8, 0, 68)
+            offsetLbl.BackgroundTransparency = 1
+            offsetLbl.Text = "Offset Y: 0"; offsetLbl.Font = Enum.Font.GothamSemibold
+            offsetLbl.TextSize = 11; offsetLbl.TextColor3 = C.white
+            offsetLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- Offset - button
+            local offMinus = Instance.new("TextButton", Frame)
+            offMinus.Size = UDim2.new(0, 40, 0, 24)
+            offMinus.Position = UDim2.new(0.5, 4, 0, 66)
+            offMinus.BackgroundColor3 = Color3.fromRGB(60, 50, 80)
+            offMinus.Text = "-"; offMinus.Font = Enum.Font.GothamBold
+            offMinus.TextSize = 16; offMinus.TextColor3 = Color3.new(1,1,1)
+            local mc = Instance.new("UICorner", offMinus); mc.CornerRadius = UDim.new(0, 5)
+
+            -- Offset + button
+            local offPlus = Instance.new("TextButton", Frame)
+            offPlus.Size = UDim2.new(0, 40, 0, 24)
+            offPlus.Position = UDim2.new(0.5, 50, 0, 66)
+            offPlus.BackgroundColor3 = Color3.fromRGB(60, 50, 80)
+            offPlus.Text = "+"; offPlus.Font = Enum.Font.GothamBold
+            offPlus.TextSize = 16; offPlus.TextColor3 = Color3.new(1,1,1)
+            local pc = Instance.new("UICorner", offPlus); pc.CornerRadius = UDim.new(0, 5)
+
+            -- Status label
+            local statusLbl = Instance.new("TextLabel", Frame)
+            statusLbl.Size = UDim2.new(1, -16, 0, 16)
+            statusLbl.Position = UDim2.new(0, 8, 0, 96)
+            statusLbl.BackgroundTransparency = 1
+            statusLbl.Text = "Presiona Q para lockear al mas cercano"
+            statusLbl.Font = Enum.Font.Gotham; statusLbl.TextSize = 9
+            statusLbl.TextColor3 = Color3.fromRGB(120, 120, 120)
+            statusLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+            AimlockEnabled = true
+            u19 = FindNearestEnemy(); u4 = true
+
+            local function updateToggleVisual()
+                if u4 then
+                    toggleBtn.Text = "AIMLOCK ON (Q)"
+                    toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
+                else
+                    toggleBtn.Text = "AIMLOCK OFF (Q)"
+                    toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                end
+            end
+            updateToggleVisual()
+
+            toggleBtn.MouseButton1Click:Connect(function()
+                if u4 then
+                    u4 = false; u19 = nil
+                else
+                    u19 = FindNearestEnemy(); u4 = true
+                end
+                updateToggleVisual()
+            end)
+
+            offMinus.MouseButton1Click:Connect(function()
+                AimlockVerticalOffset = math.max(AimlockVerticalOffset - 1, -5)
+                offsetLbl.Text = "Offset Y: " .. AimlockVerticalOffset
+            end)
+
+            offPlus.MouseButton1Click:Connect(function()
+                AimlockVerticalOffset = math.min(AimlockVerticalOffset + 1, 5)
+                offsetLbl.Text = "Offset Y: " .. AimlockVerticalOffset
+            end)
+
+            closeBtn3.MouseButton1Click:Connect(function()
+                AimlockEnabled = false; u4 = false; u19 = nil
+                main:Destroy(); aimlockGui = nil
+            end)
+
+            -- Rainbow cycle on title
+            task.spawn(function()
+                local hue = 0
+                while titleLbl and titleLbl.Parent do
+                    hue = (hue + 5) % 360
+                    titleLbl.TextColor3 = Color3.fromHSV(hue / 360, 1, 1)
+                    task.wait(0.03)
+                end
+            end)
+        end)
+    else
+        AimlockEnabled = false; u4 = false; u19 = nil
+        if aimlockGui then aimlockGui:Destroy(); aimlockGui = nil end
+    end
 end)
 
 -- ============================================================
@@ -1357,6 +1485,134 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
             end)
         end
     end
+end)
+
+addToggleRow("One Shot (Shotho)", "Abre panel - Auto off si vida <20%", extraPage, 7.5, function(on)
+    if on then
+        if oneShotGui then oneShotGui:Destroy(); oneShotGui = nil end
+        task.spawn(function()
+            local player = LocalPlayer
+            local main = Instance.new("ScreenGui")
+            main.Name = "OneShot_RivalsPremium"; main.Parent = player:WaitForChild("PlayerGui")
+            main.ResetOnSpawn = false; main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+            oneShotGui = main
+
+            local Frame = Instance.new("Frame", main)
+            Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            Frame.BorderColor3 = Color3.fromRGB(80, 80, 80)
+            Frame.Position = UDim2.new(0.1, 0, 0.55, 0)
+            Frame.Size = UDim2.new(0, 160, 0, 80)
+            Frame.Active = true; Frame.Draggable = true
+            local fc = Instance.new("UICorner", Frame); fc.CornerRadius = UDim.new(0, 8)
+            local fs = Instance.new("UIStroke", Frame); fs.Color = C.accent; fs.Thickness = 1
+
+            local titleLbl = Instance.new("TextLabel", Frame)
+            titleLbl.Size = UDim2.new(1, -40, 0, 28)
+            titleLbl.Position = UDim2.new(0, 0, 0, 0)
+            titleLbl.BackgroundTransparency = 1
+            titleLbl.Text = "ONE SHOT"; titleLbl.Font = Enum.Font.GothamBlack
+            titleLbl.TextSize = 13; titleLbl.TextColor3 = C.accent
+
+            local closeBtn2 = Instance.new("TextButton", Frame)
+            closeBtn2.Size = UDim2.new(0, 28, 0, 28)
+            closeBtn2.Position = UDim2.new(1, -28, 0, 0)
+            closeBtn2.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+            closeBtn2.Text = "X"; closeBtn2.Font = Enum.Font.GothamBold
+            closeBtn2.TextSize = 14; closeBtn2.TextColor3 = Color3.new(1,1,1)
+            local cc = Instance.new("UICorner", closeBtn2); cc.CornerRadius = UDim.new(0, 6)
+
+            local toggleBtn = Instance.new("TextButton", Frame)
+            toggleBtn.Size = UDim2.new(1, -16, 0, 34)
+            toggleBtn.Position = UDim2.new(0, 8, 0, 36)
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            toggleBtn.Text = "SHOTHO OFF"; toggleBtn.Font = Enum.Font.GothamBold
+            toggleBtn.TextSize = 14; toggleBtn.TextColor3 = Color3.new(1,1,1)
+            local tc = Instance.new("UICorner", toggleBtn); tc.CornerRadius = UDim.new(0, 6)
+
+            local onenabledshotho = false
+
+            toggleBtn.MouseButton1Click:Connect(function()
+                local char = player.Character
+                if not char then return end
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if not hrp then return end
+
+                onenabledshotho = not onenabledshotho
+                toggleBtn.Text = onenabledshotho and "SHOTHO ON" or "SHOTHO OFF"
+                toggleBtn.BackgroundColor3 = onenabledshotho and Color3.fromRGB(40, 120, 40) or Color3.fromRGB(50, 50, 50)
+
+                if onenabledshotho then
+                    task.spawn(function()
+                        while onenabledshotho do
+                            local humanoid = char:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                if humanoid.MaxHealth > 0 and (humanoid.Health / humanoid.MaxHealth) <= 0.2 then
+                                    onenabledshotho = false
+                                    toggleBtn.Text = "SHOTHO OFF"
+                                    toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                                    addNotification("One Shot", "Auto-off: vida baja", C.orange)
+                                    break
+                                end
+                            end
+                            local pos = hrp.Position
+                            hrp.CFrame = CFrame.new(pos.X, pos.Y - 795679695796326795679695796326, pos.Z)
+                            task.wait(0.01)
+                        end
+                    end)
+                end
+            end)
+
+            closeBtn2.MouseButton1Click:Connect(function()
+                onenabledshotho = false
+                main:Destroy(); oneShotGui = nil
+            end)
+        end)
+    else
+        if oneShotGui then oneShotGui:Destroy(); oneShotGui = nil end
+    end
+end)
+
+addSectionTitle("Profile Showcase", extraPage, 8)
+
+-- Showcase state
+local ShowcaseSlot = 1
+local ShowcaseItemId = 786
+local ShowcaseItemName = "Pirate King"
+
+local ShowcaseItems = {
+    {name = "Pirate King",          id = 786},
+    {name = "Le Antigua",           id = 65},
+    {name = "Super Ultra Pain",     id = 478},
+    {name = "Cotton Candy Pain",    id = 478},
+    {name = "YouTuber",             id = 680},
+    {name = "Pink Portal",          id = 458},
+    {name = "Equal to the Heaven",  id = 737},
+    {name = "Dragon Fisica",        id = 254},
+}
+
+local slotNames = {"Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6"}
+addDropdownRow("Slot", slotNames, extraPage, 9, function(opt)
+    ShowcaseSlot = tonumber(opt:match("%d+")) or 1
+end)
+
+local itemNames = {}
+for _, item in ipairs(ShowcaseItems) do table.insert(itemNames, item.name) end
+addDropdownRow("Item", itemNames, extraPage, 10, function(opt)
+    for _, item in ipairs(ShowcaseItems) do
+        if item.name == opt then
+            ShowcaseItemId = item.id
+            ShowcaseItemName = item.name
+            break
+        end
+    end
+end)
+
+addButtonRow("Aplicar Showcase", extraPage, 11, function()
+    pcall(function()
+        local args = {"Showcase", ShowcaseSlot, ShowcaseItemId}
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UpdatePlayerProfileValue"):InvokeServer(unpack(args))
+    end)
+    addNotification("Showcase", ShowcaseItemName .. " en Slot " .. ShowcaseSlot, C.green)
 end)
 
 -- ============================================================
