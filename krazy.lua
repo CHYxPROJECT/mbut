@@ -273,15 +273,18 @@ local function GetNearestPlayer()
     return nearest
 end
 
-local function TP(targetHRP)
+local function TP(targetHRP, dt)
     if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
     local HRP = LocalPlayer.Character.HumanoidRootPart
-    local predictedPos = targetHRP.Position + (targetHRP.Velocity * PredictionStrength)
-    local targetCFrame = CFrame.new(predictedPos) * CFrame.Angles(0, math.rad(targetHRP.Orientation.Y), 0) * CFrame.new(0, YOffset, 0)
-    local Distance = (targetCFrame.Position - HRP.Position).Magnitude
-    if ActiveTween then ActiveTween:Cancel() end
-    ActiveTween = TweenService:Create(HRP, TweenInfo.new(Distance / TweenSpeed.X, Enum.EasingStyle.Linear), {CFrame = targetCFrame})
-    ActiveTween:Play()
+    local predictedPos = targetHRP.Position + (targetHRP.Velocity * PredictionStrength) + Vector3.new(0, YOffset, 0)
+    local targetCFrame = CFrame.new(predictedPos) * CFrame.Angles(0, math.rad(targetHRP.Orientation.Y), 0)
+    local dist = (HRP.Position - predictedPos).Magnitude
+    if dist < 0.05 then
+        HRP.CFrame = targetCFrame
+        return
+    end
+    local alpha = math.min(1, (TweenSpeed.X * dt) / dist)
+    HRP.CFrame = HRP.CFrame:Lerp(targetCFrame, alpha)
 end
 
 -- [5] INTERFAZ RAYFIELD (GUI)
@@ -404,11 +407,11 @@ Tab2:CreateToggle({
     Callback = function(v)
         TeleportEnabled = v
         if v then
-            TeleportConnection = RunService.Heartbeat:Connect(function()
+            TeleportConnection = RunService.Heartbeat:Connect(function(dt)
                 if SelectedPlayer then
                     local target = Players:FindFirstChild(SelectedPlayer)
                     if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-                        TP(target.Character.HumanoidRootPart)
+                        TP(target.Character.HumanoidRootPart, dt)
                         SetNoCollide()
                     end
                 end
