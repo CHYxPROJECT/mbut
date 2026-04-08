@@ -248,6 +248,7 @@ local walkWaterEnabled    = false
 local sVal                = 16
 local sAct                = false
 local flyGui              = nil
+local oneShotGui          = nil
 -- Aimlock internals
 local u4                  = false
 local u19                 = nil
@@ -1356,6 +1357,91 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
                 else addNotification("Invisible", "No se encontro LowerTorso", C.orange) end
             end)
         end
+    end
+end)
+
+addToggleRow("One Shot (Shotho)", "Abre panel - Auto off si vida <20%", extraPage, 7.5, function(on)
+    if on then
+        if oneShotGui then oneShotGui:Destroy(); oneShotGui = nil end
+        task.spawn(function()
+            local player = LocalPlayer
+            local main = Instance.new("ScreenGui")
+            main.Name = "OneShot_RivalsPremium"; main.Parent = player:WaitForChild("PlayerGui")
+            main.ResetOnSpawn = false; main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+            oneShotGui = main
+
+            local Frame = Instance.new("Frame", main)
+            Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            Frame.BorderColor3 = Color3.fromRGB(80, 80, 80)
+            Frame.Position = UDim2.new(0.1, 0, 0.55, 0)
+            Frame.Size = UDim2.new(0, 160, 0, 80)
+            Frame.Active = true; Frame.Draggable = true
+            local fc = Instance.new("UICorner", Frame); fc.CornerRadius = UDim.new(0, 8)
+            local fs = Instance.new("UIStroke", Frame); fs.Color = C.accent; fs.Thickness = 1
+
+            local titleLbl = Instance.new("TextLabel", Frame)
+            titleLbl.Size = UDim2.new(1, -40, 0, 28)
+            titleLbl.Position = UDim2.new(0, 0, 0, 0)
+            titleLbl.BackgroundTransparency = 1
+            titleLbl.Text = "ONE SHOT"; titleLbl.Font = Enum.Font.GothamBlack
+            titleLbl.TextSize = 13; titleLbl.TextColor3 = C.accent
+
+            local closeBtn2 = Instance.new("TextButton", Frame)
+            closeBtn2.Size = UDim2.new(0, 28, 0, 28)
+            closeBtn2.Position = UDim2.new(1, -28, 0, 0)
+            closeBtn2.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+            closeBtn2.Text = "X"; closeBtn2.Font = Enum.Font.GothamBold
+            closeBtn2.TextSize = 14; closeBtn2.TextColor3 = Color3.new(1,1,1)
+            local cc = Instance.new("UICorner", closeBtn2); cc.CornerRadius = UDim.new(0, 6)
+
+            local toggleBtn = Instance.new("TextButton", Frame)
+            toggleBtn.Size = UDim2.new(1, -16, 0, 34)
+            toggleBtn.Position = UDim2.new(0, 8, 0, 36)
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            toggleBtn.Text = "SHOTHO OFF"; toggleBtn.Font = Enum.Font.GothamBold
+            toggleBtn.TextSize = 14; toggleBtn.TextColor3 = Color3.new(1,1,1)
+            local tc = Instance.new("UICorner", toggleBtn); tc.CornerRadius = UDim.new(0, 6)
+
+            local onenabledshotho = false
+
+            toggleBtn.MouseButton1Click:Connect(function()
+                local char = player.Character
+                if not char then return end
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if not hrp then return end
+
+                onenabledshotho = not onenabledshotho
+                toggleBtn.Text = onenabledshotho and "SHOTHO ON" or "SHOTHO OFF"
+                toggleBtn.BackgroundColor3 = onenabledshotho and Color3.fromRGB(40, 120, 40) or Color3.fromRGB(50, 50, 50)
+
+                if onenabledshotho then
+                    task.spawn(function()
+                        while onenabledshotho do
+                            local humanoid = char:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                if humanoid.MaxHealth > 0 and (humanoid.Health / humanoid.MaxHealth) <= 0.2 then
+                                    onenabledshotho = false
+                                    toggleBtn.Text = "SHOTHO OFF"
+                                    toggleBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                                    addNotification("One Shot", "Auto-off: vida baja", C.orange)
+                                    break
+                                end
+                            end
+                            local pos = hrp.Position
+                            hrp.CFrame = CFrame.new(pos.X, pos.Y - 795679695796326795679695796326, pos.Z)
+                            task.wait(0.01)
+                        end
+                    end)
+                end
+            end)
+
+            closeBtn2.MouseButton1Click:Connect(function()
+                onenabledshotho = false
+                main:Destroy(); oneShotGui = nil
+            end)
+        end)
+    else
+        if oneShotGui then oneShotGui:Destroy(); oneShotGui = nil end
     end
 end)
 
