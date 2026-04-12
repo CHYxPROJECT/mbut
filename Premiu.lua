@@ -15,16 +15,16 @@ local HttpService       = game:GetService("HttpService")
 
 -- [1] SISTEMA DE COLORES PERSISTENTE
 local ColorPresets = {
-    {name = "Blanco Puro",       color = Color3.fromRGB(255, 255, 255)},
-    {name = "Negro Mate",        color = Color3.fromRGB(30, 30, 30)},
-    {name = "Gris Carbon",       color = Color3.fromRGB(80, 80, 80)},
-    {name = "Azul Real",         color = Color3.fromRGB(65, 105, 225)},
-    {name = "Rojo Coral",        color = Color3.fromRGB(255, 87, 87)},
-    {name = "Verde Esmeralda",   color = Color3.fromRGB(46, 204, 113)},
-    {name = "Azul Cielo / Cian", color = Color3.fromRGB(0, 210, 255)},
-    {name = "Amarillo Mostaza",  color = Color3.fromRGB(212, 175, 55)},
-    {name = "Morado Electrico",  color = Color3.fromRGB(160, 100, 255)},
-    {name = "Beige / Arena",     color = Color3.fromRGB(210, 190, 160)},
+    {name = "Putih Bersih",       color = Color3.fromRGB(255, 255, 255)},
+    {name = "Hitam Dop/Matte",        color = Color3.fromRGB(30, 30, 30)},
+    {name = "Abu-abu Karbon",       color = Color3.fromRGB(80, 80, 80)},
+    {name = "Biru Kerajaan",         color = Color3.fromRGB(65, 105, 225)},
+    {name = "Merah Koral",        color = Color3.fromRGB(255, 87, 87)},
+    {name = "Hijau Zamrud",   color = Color3.fromRGB(46, 204, 113)},
+    {name = "Biru Langit / Sian", color = Color3.fromRGB(0, 210, 255)},
+    {name = "Kuning Mustard",  color = Color3.fromRGB(212, 175, 55)},
+    {name = "Ungu Elektrik",  color = Color3.fromRGB(160, 100, 255)},
+    {name = "Krem / Warna Pasir",     color = Color3.fromRGB(210, 190, 160)},
 }
 
 local DEFAULT_PRIMARY   = "Amarillo Mostaza"
@@ -144,7 +144,7 @@ local function RunIntro()
     Title.Size = UDim2.new(1, 0, 0.5, 0)
     Title.Position = UDim2.new(0, 0, 0.25, 0)
     Title.BackgroundTransparency = 1
-    Title.Text = "RIVALS HUB PREMIUM"
+    Title.Text = "PANEL BLOX PREMIUM"
     Title.TextColor3 = C.accent
     Title.Font = Enum.Font.GothamBlack
     Title.TextSize = 42
@@ -156,7 +156,7 @@ local function RunIntro()
     Subtitle.Size = UDim2.new(1, 0, 0.1, 0)
     Subtitle.Position = UDim2.new(0, 0, 0.6, 0)
     Subtitle.BackgroundTransparency = 1
-    Subtitle.Text = "Cargando Premium..."
+    Subtitle.Text = "Sedang Memuat Premium..."
     Subtitle.TextColor3 = C.accent2
     Subtitle.Font = Enum.Font.Code
     Subtitle.TextSize = 16
@@ -211,7 +211,7 @@ end)
 -- [5] VARIABLES DE ESTADO
 -- Combate
 local FastAttackEnabled   = false
-local FastAttackRange     = 5000
+local FastAttackRange     = 500000
 local FastAttackConnection = nil
 local AimlockEnabled      = false
 local AimlockVerticalOffset = 0
@@ -263,7 +263,7 @@ local RegisterAttack = Net["RE/RegisterAttack"]
 local function CreateESP(target)
     if not target:FindFirstChild("Head") then return end
     local billboard = Instance.new("BillboardGui")
-    billboard.Name = "RivalsPremiumESP"
+    billboard.Name = "PanelPremiumESP"
     billboard.Adornee = target:FindFirstChild("Head")
     billboard.Size = UDim2.new(0, 100, 0, 40)
     billboard.StudsOffset = Vector3.new(0, 2, 0)
@@ -486,10 +486,10 @@ end
 --  SCREEN GUI
 -- ============================================================
 local pgui = LocalPlayer:WaitForChild("PlayerGui")
-if pgui:FindFirstChild("RivalsHubPremium") then pgui.RivalsHubPremium:Destroy() end
+if pgui:FindFirstChild("PanelHubPremium") then pgui.RivalsHubPremium:Destroy() end
 
 local screenGui = Instance.new("ScreenGui", pgui)
-screenGui.Name = "RivalsHubPremium"
+screenGui.Name = "PanelHubPremium"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.DisplayOrder = 1
@@ -540,7 +540,7 @@ end
 local SIDEBAR_W = 140
 local TITLEBAR_H = 46
 
-local currentGuiSize = "Mediano"
+local currentGuiSize = "Sedang"
 local guiSizes = {
     Pequeno = {w = 440, h = 310},
     Mediano = {w = 530, h = 380},
@@ -579,7 +579,7 @@ trackTheme(titleBarFill, "BackgroundColor3", "panel")
 titleBarFill.BorderSizePixel = 0
 
 local titleName = label({
-    Text = "Rivals Hub", Font = Enum.Font.GothamBlack, TextSize = 15, TextColor3 = C.white,
+    Text = "Panel Hub", Font = Enum.Font.GothamBlack, TextSize = 15, TextColor3 = C.white,
     Size = UDim2.new(0, 90, 1, 0), Position = UDim2.new(0, 12, 0, 0),
 }, titleBar)
 
@@ -1007,7 +1007,7 @@ createNavBtn("Combate",        "  Combate")
 createNavBtn("PlayerLock",     "  Player Lock")
 createNavBtn("FuncionesExtra", "  Funciones Extra")
 createNavBtn("Visual",         "  Visual")
-createNavBtn("Movimiento",     "  Movimiento")
+createNavBtn("Movement",     "  Movement")
 createNavBtn("Teleport",       "  Teleport")
 createNavBtn("Settings",       "  Settings")
 
@@ -1045,7 +1045,7 @@ local iconImage = Instance.new("ImageLabel", iconWrap)
 iconImage.Size = UDim2.new(1, 0, 1, 0); iconImage.BackgroundTransparency = 1
 iconImage.Image = "rbxassetid://127186589815047"; iconImage.ScaleType = Enum.ScaleType.Fit; iconImage.ZIndex = 10
 
-local bannerTitle = label({Text = "RIVALS HUB PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 16, TextColor3 = C.accent,
+local bannerTitle = label({Text = "PANEL HUB PREMIUM", Font = Enum.Font.GothamBlack, TextSize = 16, TextColor3 = C.accent,
     Size = UDim2.new(1, -76, 0, 22), Position = UDim2.new(0, 70, 0, 12),
     TextXAlignment = Enum.TextXAlignment.Left}, banner)
 bannerTitle.TextTruncate = Enum.TextTruncate.AtEnd
@@ -1088,13 +1088,13 @@ local discordRow = Instance.new("TextButton", homePage)
 discordRow.Size = UDim2.new(1, 0, 0, 36); discordRow.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
 discordRow.Text = ""; discordRow.LayoutOrder = 3; corner(8, discordRow)
 stroke(Color3.fromRGB(60, 65, 140), 1, discordRow)
-label({Text = "discord.gg/QvpGRwDdpZ", Font = Enum.Font.GothamSemibold, TextSize = 13,
+label({Text = "discord.gg/", Font = Enum.Font.GothamSemibold, TextSize = 13,
     TextColor3 = C.accent2, Size = UDim2.new(1,0,1,0), TextXAlignment = Enum.TextXAlignment.Center}, discordRow)
 discordRow.MouseEnter:Connect(function() tween(discordRow, 0.1, {BackgroundColor3 = Color3.fromRGB(25,25,65)}) end)
 discordRow.MouseLeave:Connect(function() tween(discordRow, 0.1, {BackgroundColor3 = Color3.fromRGB(20,20,50)}) end)
 
 -- GUI Size selector
-addSectionTitle("Tamano de GUI", homePage, 4)
+addSectionTitle("Ukuran Gui", homePage, 4)
 local sizeContainer = Instance.new("Frame", homePage)
 sizeContainer.Size = UDim2.new(1, 0, 0, 40); sizeContainer.BackgroundColor3 = C.item; sizeContainer.LayoutOrder = 5
 corner(8, sizeContainer); local szStroke = stroke(C.border, 1, sizeContainer)
@@ -1118,9 +1118,9 @@ local function applySizeBtn(selected)
 end
 
 for _, s in ipairs({
-    {label = "Pequeno", w = 440, h = 310},
-    {label = "Mediano", w = 530, h = 380},
-    {label = "Grande",  w = 620, h = 450},
+    {label = "Kecil", w = 440, h = 310},
+    {label = "Sedang", w = 530, h = 380},
+    {label = "Besar",  w = 620, h = 450},
 }) do
     local btn = Instance.new("TextButton", sizeContainer)
     btn.Size = UDim2.new(0, 84, 0, 26)
@@ -1141,7 +1141,7 @@ end
 -- ============================================================
 --  COMBATE PAGE
 -- ============================================================
-addSectionTitle("Ataque", combatPage, 1)
+addSectionTitle("Attack", combatPage, 1)
 
 addToggleRow("Fast Attack", "Multi-objetivo", combatPage, 2, function(on)
     FastAttackEnabled = on
@@ -1156,13 +1156,13 @@ end)
 
 addSectionTitle("Aimlock", combatPage, 5)
 
-addToggleRow("Aimlock", "Abre panel - Q para lockear", combatPage, 6, function(on)
+addToggleRow("Aimlock", "Open panel - Q to lock", combatPage, 6, function(on)
     if on then
         if aimlockGui then aimlockGui:Destroy(); aimlockGui = nil end
         task.spawn(function()
             local player = LocalPlayer
             local main = Instance.new("ScreenGui")
-            main.Name = "Aimlock_RivalsPremium"; main.Parent = player:WaitForChild("PlayerGui")
+            main.Name = "Aimlock_PanelPremium"; main.Parent = player:WaitForChild("PlayerGui")
             main.ResetOnSpawn = false; main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
             aimlockGui = main
 
@@ -1295,21 +1295,21 @@ end)
 -- ============================================================
 --  PLAYER LOCK PAGE (de krazy.lua + Azucar hub)
 -- ============================================================
-addSectionTitle("Seleccion de Jugador", playerPage, 1)
+addSectionTitle("Player Selected", playerPage, 1)
 
 local playerDropdown = addDropdownRow("Jugador", GetPlayerList(), playerPage, 2, function(opt)
     if opt == "Ninguno" then SelectedPlayer = nil
     else SelectedPlayer = opt end
 end)
 
-addButtonRow("Refrescar Lista", playerPage, 3, function()
+addButtonRow("Refresh List", playerPage, 3, function()
     playerDropdown.refresh(GetPlayerList())
-    addNotification("Player Lock", "Lista actualizada", C.green)
+    addNotification("Player Lock", "Update List", C.green)
 end)
 
-addSectionTitle("Seguimiento", playerPage, 4)
+addSectionTitle("Tracking", playerPage, 4)
 
-addToggleRow("Tween to Player", "Movimiento suave con prediccion", playerPage, 5, function(v)
+addToggleRow("Tween to Player", "Smooth Movement With Prediction", playerPage, 5, function(v)
     TeleportEnabled = v
     if v then
         TeleportConnection = RunService.Heartbeat:Connect(function()
@@ -1332,7 +1332,7 @@ addSliderRow("Tween Speed", 50, 350, 350, playerPage, 6, function(val)
     TweenSpeedVal = val
 end)
 
-addToggleRow("Insta TP", "Teleport instantaneo continuo", playerPage, 7, function(v)
+addToggleRow("Insta TP", "Instant Teleport", playerPage, 7, function(v)
     InstaTeleportEnabled = v
     if v then
         InstaTpConnection = RunService.Stepped:Connect(function()
@@ -1355,7 +1355,7 @@ addSliderRow("Y Offset", 0, 500, 0, playerPage, 8, function(val)
     YOffset = val
 end)
 
-addToggleRow("Spectate", "Ver camara de otro jugador", playerPage, 9, function(v)
+addToggleRow("Spectate", "Specatet", playerPage, 9, function(v)
     SpectateEnabled = v
     if v then
         SpectateConnection = RunService.RenderStepped:Connect(function()
@@ -1374,15 +1374,15 @@ end)
 
 addSectionTitle("Orbit & Tracker", playerPage, 10)
 
-addToggleRow("Orbit Attack", "Orbitar alrededor del enemigo", playerPage, 11, function(v)
+addToggleRow("Orbit Attack", "Orbit around the enemy", playerPage, 11, function(v)
     OrbitEnabled = v
 end)
 
-addSliderRow("Orbit Distancia", 2, 50, 5, playerPage, 12, function(val)
+addSliderRow("Orbit Distance", 2, 50, 5, playerPage, 12, function(val)
     OrbitDistance = val
 end)
 
-addSliderRow("Orbit Altura", 2, 350, 2, playerPage, 13, function(val)
+addSliderRow("Orbit Aura", 2, 350, 2, playerPage, 13, function(val)
     OrbitHeight = val
 end)
 
@@ -1390,7 +1390,7 @@ end)
 -- ============================================================
 --  FUNCIONES EXTRA PAGE (Fruit Attacks, V4, Invisible)
 -- ============================================================
-addSectionTitle("Ataques de Fruta", extraPage, 1)
+addSectionTitle("Attack Fruit", extraPage, 1)
 
 addToggleRow("Fruit Attack (Kitsune)", "Ultra Speed - LeftClickRemote", extraPage, 2, function(v)
     FruitAttackKitsune = v
@@ -1456,9 +1456,9 @@ addToggleRow("Auto V4 Awakening", "Activa awakening automaticamente", extraPage,
     end
 end)
 
-addSectionTitle("Otros", extraPage, 6)
+addSectionTitle("Others", extraPage, 6)
 
-addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, function(v)
+addToggleRow("Mode Invisible", "Destruye LowerTorso.Root", extraPage, 7, function(v)
     if v then
         local function destroyRoot()
             local char = LocalPlayer.Character
@@ -1471,7 +1471,7 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
             return false
         end
         if destroyRoot() then
-            addNotification("Invisible", "Modo invisible activado", C.green)
+            addNotification("Invisible", "Mode invisible actived", C.green)
         else
             -- Esperar a que cargue el personaje y reintentar
             task.spawn(function()
@@ -1479,7 +1479,7 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
                 task.wait(1)
                 if char and char:FindFirstChild("LowerTorso") then
                     local root = char.LowerTorso:FindFirstChild("Root")
-                    if root then root:Destroy(); addNotification("Invisible", "Modo invisible activado", C.green)
+                    if root then root:Destroy(); addNotification("Invisible", "Mode invisible Actived", C.green)
                     else addNotification("Invisible", "No se encontro LowerTorso.Root", C.orange) end
                 else addNotification("Invisible", "No se encontro LowerTorso", C.orange) end
             end)
@@ -1487,13 +1487,13 @@ addToggleRow("Modo Invisible", "Destruye LowerTorso.Root", extraPage, 7, functio
     end
 end)
 
-addToggleRow("One Shot (Shotho)", "Abre panel - Auto off si vida <20%", extraPage, 7.5, function(on)
+addToggleRow("One Shot (Shotho)", "Auto off if health <20%", extraPage, 7.5, function(on)
     if on then
         if oneShotGui then oneShotGui:Destroy(); oneShotGui = nil end
         task.spawn(function()
             local player = LocalPlayer
             local main = Instance.new("ScreenGui")
-            main.Name = "OneShot_RivalsPremium"; main.Parent = player:WaitForChild("PlayerGui")
+            main.Name = "OneShot_PanelPremium"; main.Parent = player:WaitForChild("PlayerGui")
             main.ResetOnSpawn = false; main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
             oneShotGui = main
 
@@ -1581,7 +1581,7 @@ local ShowcaseItemName = "Pirate King"
 
 local ShowcaseItems = {
     {name = "Pirate King",          id = 786},
-    {name = "Le Antigua",           id = 65},
+    {name = "El krazy",           id = 693},
     {name = "Super Ultra Pain",     id = 478},
     {name = "Cotton Candy Pain",    id = 478},
     {name = "YouTuber",             id = 680},
