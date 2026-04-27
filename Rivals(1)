@@ -897,7 +897,7 @@ local titleName = label({
 }, titleBar)
 
 local titleSub = label({
-    Text = "by Nana + SilentAim",
+    Text = "by Nana",
     Font = Enum.Font.Gotham,
     TextSize = 11,
     TextColor3 = C.sub,
